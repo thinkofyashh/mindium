@@ -17,21 +17,22 @@ const app = new Hono<{ Bindings: Bindings }>()
 
 
 app.post('/api/v1/user/signup',async (c)=>{
+
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
 }).$extends(withAccelerate())
 
-
-
-
 try{
 
+  // expecting body from the post route .
   const body = await c.req.json()
 
+  // checking if email,name and password is there in the body or not .
   if (!body.email || !body.password || !body.name) {
     return c.json({ error: "Email, password and name are required" }, 400)
   }
 
+  // creating the user in the data base 
   const user =await prisma.user.create({
     data:{
       name:body.name,
@@ -40,13 +41,12 @@ try{
     }
   })
 
+  // checking if the user successfully created or not . if created wheather it has  user id or not .
   if (!user || !user.id) {
     return c.json({ error: "Failed to create user properly" }, 500)
   }
 
-  console.log(user.id);
-
-
+  // creating the valid JWT token for the user .
   const token=await sign({id:user.id},c.env.JWT_SECRET)
 
 
@@ -56,18 +56,50 @@ try{
   return c.json({error:e instanceof Error ? e.message : String(e)})
 }
 
-
-
-  
-  
-
 }
 
 )
 
-app.post('/api/v1/user/signin',(c)=>{
+app.post('/api/v1/user/signin',async(c)=>{
+
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+}).$extends(withAccelerate())
+
+try{
+
+  // getting email id from the user 
+
+  const body=await c.req.json()
+
+  // checking if the email id is present or not in the db
+
+  const user =await prisma.user.findUnique({
+    where:{
+      email:body.email,
+      password:body.password
+
+    }
+  })
+  // if the email id dont exists .
+
+  if(!user){
+    return c.json({error:"User not found"},401)
+  }
+  // if the email id exists token is sent to the user .
+
+  const token=await sign({user:user.id},c.env.JWT_SECRET)
+
+  return c.json({token})
+
+}catch(e){
+
+  return c.json({error:e instanceof Error ? e.message : String(e)})
+
+
+}
   
-  return c.text("hello")}
+  }
 
 )
 
