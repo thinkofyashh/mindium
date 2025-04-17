@@ -103,7 +103,36 @@ try{
 
 )
 
+app.use('/api/v1/blog/*',async(c,next)=>{
+
+  // expecting the token from headers in authorization 
+  const response = c.req.header("Authorization") || "";
+
+  // spliting the token since it is in the format Bearer kjbfjhabfa
+  const tokenToBeVerify=response.split(" ")[1];
+
+  try{
+
+    // verifying the token if it is ok or not (if it is ok it will return us the user object)
+    const isValid=await verify(tokenToBeVerify,c.env.JWT_SECRET)
+
+    // if the token is not ok then we will send the user in this check 
+    if(!isValid.id){
+      return c.json({error:"Invalid token"},401)
+    }
+
+    // if all good then it can accesss the route .
+
+    await next();
+
+  }catch(e){
+    return c.json({error:e instanceof Error ? e.message : String(e)},401)
+  }
+
+})
+
 app.post('/api/v1/blog',(c)=>{
+  console.log("hello ji")
   
   return c.text("hello")}
 
