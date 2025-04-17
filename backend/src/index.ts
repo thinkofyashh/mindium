@@ -226,6 +226,7 @@ return c.json({msg:"Updated Successfully "})
 
 app.get('/api/v1/blog/:id', async(c) => {
 
+  // route is working correctly 
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
 }).$extends(withAccelerate())
