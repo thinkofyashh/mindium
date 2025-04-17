@@ -8,11 +8,19 @@ import { decode, sign, verify } from 'hono/jwt'
 type Bindings = {
   DATABASE_URL: string;
   JWT_SECRET: string;
+
+}
+type context={
+  userId: string
 }
 
-const app = new Hono<{ Bindings: Bindings }>()
 
 
+const app = new Hono<{ Bindings: Bindings,Variables:context }>()
+
+
+//app.route('/api/v1/user',userRouter);
+//app.route('/api/v1/blog',blogRouter);
 
 
 
@@ -123,7 +131,11 @@ app.use('/api/v1/blog/*',async(c,next)=>{
 
     // if all good then it can accesss the route .
 
-    await next();
+   if(isValid){
+    c.set("userId",String(isValid.id))
+   }
+
+   await  next();
 
   }catch(e){
     return c.json({error:e instanceof Error ? e.message : String(e)},401)
@@ -131,10 +143,33 @@ app.use('/api/v1/blog/*',async(c,next)=>{
 
 })
 
-app.post('/api/v1/blog',(c)=>{
-  console.log("hello ji")
+
+app.post('/api/v1/blog',async (c)=>{
   
-  return c.text("hello")}
+
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+}).$extends(withAccelerate())
+
+try{
+  const body= await c.req.json();
+  const authorId=c.get("userId")
+
+const res=await prisma.post.create({
+  data:{
+    title:body.title,
+    content:body.content,
+    authorId:authorId
+    }
+})
+
+return c.json({id:res.id})
+}catch(e){
+  return c.json({error:e instanceof Error ? e.message : String(e)},500)
+}
+  
+ // return c.text("hello")}
+}
 
 )
 
@@ -146,21 +181,72 @@ app.get('/api/v1/blog/bulk', async(c) => {
 }).$extends(withAccelerate())
 
 
-  const posts = await prisma.post.findMany()
-
-  return c.json(posts);
+  try{
+    const posts = await prisma.post.findMany(
+      {}
+    )
+  
+    return c.json(posts);
+  }catch(e){
+    return c.json({error:e instanceof Error ? e.message : String(e)},401)
+  }
 
 }
 
 )
 
-app.put('/api/v1/blog',(c)=>{
+app.put('/api/v1/blog',async (c)=>{
+
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+}).$extends(withAccelerate())
+
+try{
+  const body= await c.req.json();
+
+const res=await prisma.post.update({
+  where:{
+    id:body.id
+  },
+  data:{
+    title:body.title,
+    content:body.content,
+    }
+})
+
+return c.json({msg:"Updated Successfully "})
+}catch(e){
+  return c.json({error:e instanceof Error ? e.message : String(e)},401)
+}
   
-  return c.text('hello hono')}
+
+}
 
 )
 
 app.get('/api/v1/blog/:id', async(c) => {
+
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+}).$extends(withAccelerate())
+
+const id = c.req.param('id')
+
+try{
+
+const post=await prisma.post.findUnique({
+  where:{
+    id:id
+  }
+})
+
+if(!post){
+  return c.json({msg:"Post not found"})
+}
+return c.json(post)
+}catch(e){
+  return c.json({error:e instanceof Error ? e.message : String(e)},401)
+}
   
 })
 
