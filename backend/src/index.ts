@@ -3,6 +3,8 @@ import { Hono } from 'hono'
 import { PrismaClient } from './generated/prisma/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { decode, sign, verify } from 'hono/jwt'
+import { signupInput,signInInput,createBlogInput,updateBlogInput } from '@yashrawatechnologies/mindium-commons'
+
 
 
 type Bindings = {
@@ -32,8 +34,18 @@ app.post('/api/v1/user/signup',async (c)=>{
 
 try{
 
+  
+
   // expecting body from the post route .
   const body = await c.req.json()
+
+  // checking it (by zod validation)
+  const {success}= signupInput.safeParse(body);
+
+  // if it doesnt have correct structure which is specified in the zod schema
+  if(!success){
+    return c.json({msg:"Invalid Credentials .Please check the credentials !!"})
+  }
 
   // checking if email,name and password is there in the body or not .
   if (!body.email || !body.password || !body.name) {
@@ -80,6 +92,11 @@ try{
 
   const body=await c.req.json()
 
+  const {success}=signInInput.safeParse(body)
+
+  if(!success){
+    return c.json({error:"Invalid input"},400)
+  }
   // checking if the email id is present or not in the db
 
   const user =await prisma.user.findUnique({
@@ -153,6 +170,12 @@ app.post('/api/v1/blog',async (c)=>{
 
 try{
   const body= await c.req.json();
+
+  const {success}=createBlogInput.safeParse(body);
+
+  if(!success){
+    return c.json({error:"Invalid input"},400)
+  }
   const authorId=c.get("userId")
 
 const res=await prisma.post.create({
@@ -203,6 +226,12 @@ app.put('/api/v1/blog',async (c)=>{
 
 try{
   const body= await c.req.json();
+
+  const {success}=updateBlogInput.safeParse(body);
+
+  if(!success){
+    return c.json({error:"Invalid request"},400)
+  }
 
 const res=await prisma.post.update({
   where:{
