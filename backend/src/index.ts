@@ -3,6 +3,7 @@ import { Hono } from 'hono'
 import { PrismaClient } from './generated/prisma/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { decode, sign, verify } from 'hono/jwt'
+import { cors } from 'hono/cors'
 import { signupInput,signInInput,createBlogInput,updateBlogInput } from '@yashrawatechnologies/mindium-commons'
 
 
@@ -25,7 +26,7 @@ const app = new Hono<{ Bindings: Bindings,Variables:context }>()
 //app.route('/api/v1/blog',blogRouter);
 
 
-
+app.use('/api/*', cors())
 app.post('/api/v1/user/signup',async (c)=>{
 
   const prisma = new PrismaClient({
