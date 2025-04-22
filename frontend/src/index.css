@@ -2,16 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Beautiful smooth breathing motion */
 @keyframes gradientMove {
-    0%, 100% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
+  0% {
+    background-position: 0% 50%;
   }
-  
-  .bg-animate {
-    background-size: 300% 300%;
-    animation: gradientMove 12s ease infinite;
+  25% {
+    background-position: 50% 100%;
   }
+  50% {
+    background-position: 100% 50%;
+  }
+  75% {
+    background-position: 50% 0%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.bg-animate {
+  background: linear-gradient(300deg, #ff7e5f, #feb47b, #86a8e7, #91eae4);
+  background-size: 400% 400%;
+  animation: gradientMove 15s ease-in-out infinite;
+}
