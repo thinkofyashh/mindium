@@ -2,12 +2,15 @@ import React from 'react';
 import { BlogCard } from '../components/BlogCard';
 import { AppBar } from '../components/AppBar';
 import { useBlogs } from '../hooks';
+import { BlogSkeleton } from '../components/BlogSkeleton';
 
 export const Blogs = () => {
     const {loading,blogs}=useBlogs();
     if(loading){
         return <div>
-            loading...
+            <BlogSkeleton></BlogSkeleton>
+            <BlogSkeleton></BlogSkeleton>
+            <BlogSkeleton></BlogSkeleton>
         </div>
     }
     return (
