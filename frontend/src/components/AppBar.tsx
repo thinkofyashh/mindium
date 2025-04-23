@@ -10,6 +10,16 @@ export const AppBar = () => {
           Mindium
         </div>
         </Link>
+        <Link to={'/publish'}>
+        <button className="bg-animate text-white px-6 py-2 rounded-full font-semibold hover:scale-105 transition-transform duration-300">
+  New
+</button>
+
+
+   
+</Link>
+
+
         <div className="flex items-center space-x-4">
           <Avatar authorName="Yash Rawat" />
           <span className="text-white text-lg font-medium">{'Yash Rawat'}</span>

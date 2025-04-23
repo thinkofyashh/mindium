@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* Beautiful smooth breathing motion */
-@keyframes gradientMove {
+@keyframes gradientBreath {
   0% {
     background-position: 0% 50%;
   }
@@ -24,9 +24,27 @@
 .bg-animate {
   background: linear-gradient(300deg, #ff7e5f, #feb47b, #86a8e7, #91eae4);
   background-size: 400% 400%;
-  animation: gradientMove 15s ease-in-out infinite;
+  animation: gradientBreath 15s ease-in-out infinite;
 }
 
 .shadow-neon {
   box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.4);
 }
+
+/* Fast smooth gradient move */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-move {
+  animation: gradientMove 4s ease infinite;
+}
+
