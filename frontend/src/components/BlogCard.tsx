@@ -1,9 +1,11 @@
+import { Link } from "react-router-dom";
 
 interface BlogCardInputs{
     authorName :string;
     title:string;
     content:string;
     publishedDate:string
+    id:string
 }
 
 interface AvatarProps {
@@ -11,9 +13,10 @@ interface AvatarProps {
   }
 
 
-export const BlogCard=({authorName,title,content,publishedDate}:BlogCardInputs)=>{
+export const BlogCard=({authorName,title,content,publishedDate,id}:BlogCardInputs)=>{
     return (
         <>
+        <Link to={`/blog/${id}`}>
         <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg border-2 border-gray-300 hover:shadow-xl hover:scale-105 transition-all duration-300 ease-in-out">
   <div className="flex items-center gap-x-4 mb-4">
     <Avatar authorName={authorName} />
@@ -36,7 +39,7 @@ export const BlogCard=({authorName,title,content,publishedDate}:BlogCardInputs)=
     {`${Math.ceil(content.length / 100)} minutes read`}
   </div>
 </div>
-
+</Link>
         </>
     )
 }

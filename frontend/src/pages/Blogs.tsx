@@ -18,7 +18,7 @@ export const Blogs = () => {
             {blogs.map((blog)=>{
 
 
-                return <BlogCard authorName={blog.author.name} title={blog.title} content={blog.content} publishedDate='2 feb 2024'></BlogCard>
+                return <BlogCard id={blog.id} authorName={blog.author.name} title={blog.title} content={blog.content} publishedDate='2 feb 2024'></BlogCard>
             })}
            
         </div>

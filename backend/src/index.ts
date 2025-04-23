@@ -279,6 +279,15 @@ try{
 const post=await prisma.post.findUnique({
   where:{
     id:id
+  },select:{
+    title:true,
+    content:true,
+    id:true,
+    author:{
+      select:{
+        name:true
+      }
+    }
   }
 })
 
