@@ -26,3 +26,7 @@
   background-size: 400% 400%;
   animation: gradientMove 15s ease-in-out infinite;
 }
+
+.shadow-neon {
+  box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.4);
+}
