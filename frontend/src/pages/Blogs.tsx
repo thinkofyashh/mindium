@@ -1,30 +1,26 @@
 import React from 'react';
 import { BlogCard } from '../components/BlogCard';
 import { AppBar } from '../components/AppBar';
+import { useBlogs } from '../hooks';
 
 export const Blogs = () => {
+    const {loading,blogs}=useBlogs();
+    if(loading){
+        return <div>
+            loading...
+        </div>
+    }
     return (
         
         <div className="">
+
             <AppBar></AppBar>
-            <BlogCard 
-            authorName={"yash Rawat"}
-            title={"how to reduce fat"}
-            content={"eat calorie deficit diet and also eat very clean diet and have a good protien intake .it should be equal to wieght of your body ."}
-            publishedDate={"2 feb 2024"}
-            ></BlogCard>
-            <BlogCard 
-            authorName={"yash Rawat"}
-            title={"how to reduce fat"}
-            content={"eat calorie deficit diet and also eat very clean diet and have a good protien intake .it should be equal to wieght of your body ."}
-            publishedDate={"2 feb 2024"}
-            ></BlogCard>
-            <BlogCard 
-            authorName={"yash Rawat"}
-            title={"how to reduce fat"}
-            content={"eat calorie deficit diet and also eat very clean diet and have a good protien intake .it should be equal to wieght of your body ."}
-            publishedDate={"2 feb 2024"}
-            ></BlogCard>
+            {blogs.map((blog)=>{
+
+
+                return <BlogCard authorName={blog.author.name} title={blog.title} content={blog.content} publishedDate='2 feb 2024'></BlogCard>
+            })}
+           
         </div>
     )
 }
