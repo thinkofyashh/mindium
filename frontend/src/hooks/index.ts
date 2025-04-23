@@ -4,7 +4,7 @@ import { BACKEND_URL } from "../config";
 
 
 
-interface blogs{
+export interface blogs{
     title:string;
     content:string,
     id:string,
