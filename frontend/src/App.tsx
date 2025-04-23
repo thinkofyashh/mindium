@@ -4,6 +4,7 @@ import { Signin } from './pages/Signin'
 import { Blog } from './pages/Blog'
 import { Blogs } from './pages/Blogs'
 import { Publish } from './pages/Publish'
+import { Navigate } from 'react-router-dom'
 
 function App() {
 
@@ -11,7 +12,9 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+        <Route path="/" element={<Navigate to="/signup" replace />} />
           <Route path="/signup" element={<Signup />} />
+
           <Route path="/signin" element={<Signin />} />
           <Route path="/blog/:id" element={<Blog />} />
           <Route path="/blogs" element={<Blogs />} />
